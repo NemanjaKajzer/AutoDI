@@ -8,16 +8,18 @@ namespace AutoDI.SourceGenerator
         public string ImplementationFQN { get; }
         public ImmutableArray<string> InterfaceFQNs { get; }
         public ServiceLifetime Lifetime { get; }
+        public bool IsOpenGeneric { get; }
 
         public RegistrationModel(
             string implementationFQN,
             ImmutableArray<string> interfaceFQNs,
-            ServiceLifetime lifetime)
+            ServiceLifetime lifetime,
+            bool isOpenGeneric)
         {
             ImplementationFQN = implementationFQN;
             InterfaceFQNs = interfaceFQNs;
             Lifetime = lifetime;
-
+            IsOpenGeneric = isOpenGeneric;
         }
         public bool Equals(RegistrationModel other)
         {
@@ -27,6 +29,7 @@ namespace AutoDI.SourceGenerator
             if (ImplementationFQN != other.ImplementationFQN) return false;
             if (Lifetime != other.Lifetime) return false;
             if (InterfaceFQNs.Length != other.InterfaceFQNs.Length) return false;
+            if (IsOpenGeneric != other.IsOpenGeneric) return false;
 
             for (int i = 0; i < InterfaceFQNs.Length; i++)
             {
@@ -47,6 +50,7 @@ namespace AutoDI.SourceGenerator
                 int hash = 17;
                 hash = hash * 31 + (ImplementationFQN?.GetHashCode() ?? 0);
                 hash = hash * 31 + Lifetime.GetHashCode();
+                hash = hash * 31 + IsOpenGeneric.GetHashCode();
                 foreach (var iface in InterfaceFQNs)
                     hash = hash * 31 + (iface?.GetHashCode() ?? 0);
                 return hash;
