@@ -58,23 +58,32 @@ namespace AutoDI.SourceGenerator
             if (lifetime == null)
                 return null;
 
+            bool isOpenGeneric = classSymbol.TypeParameters.Length > 0;
+
             // Step 3: capture interface FQNs, excluding IDisposable
             var interfaces = ImmutableArray.CreateBuilder<string>();
 
             foreach (var iface in classSymbol.Interfaces)
             {
-                var ifaceFQN = iface.ToDisplayString();
+                var ifaceFQN = iface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
-                if (ifaceFQN == "System.IDisposable")
+                if (ifaceFQN == "global::System.IDisposable")
                     continue;
 
-                interfaces.Add(ifaceFQN);
+                // for open generics, strip the type arguments to get IRepository<> from IRepository<T>
+                if (isOpenGeneric && iface.IsGenericType)
+                    interfaces.Add(iface.ConstructUnboundGenericType().ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
+                else
+                    interfaces.Add(ifaceFQN);
             }
 
             return new RegistrationModel(
-                implementationFQN: classSymbol.ToDisplayString(),
+                implementationFQN: isOpenGeneric
+                    ? classSymbol.ConstructUnboundGenericType().ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    : classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 interfaceFQNs: interfaces.ToImmutable(),
-                lifetime: lifetime.Value
+                lifetime: lifetime.Value,
+                isOpenGeneric: isOpenGeneric
             );
         }
     }
