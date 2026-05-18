@@ -20,7 +20,7 @@ namespace AutoDI.SourceGenerator
             // P3-11: collect + emit
             context.RegisterSourceOutput(
                 provider.Collect(),
-                (ctx, models) => EmitRegistrationEnxtension(ctx, models)
+                (ctx, models) => EmitRegistrationExtension(ctx, models)
             );
         }
 
