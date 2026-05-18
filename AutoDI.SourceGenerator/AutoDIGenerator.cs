@@ -9,7 +9,6 @@ namespace AutoDI.SourceGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            // Pipeline will be built here in subsequent tasks:
             // P3-02: syntax predicate
             var provider = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: (node, _) => node is ClassDeclarationSyntax cls
@@ -17,7 +16,6 @@ namespace AutoDI.SourceGenerator
                 transform: (ctx, _) => GetRegistrationModel(ctx)
             )
             .Where(model => model != null);
-            // P3-04: transform function
             // P3-11: collect + emit
         }
 
