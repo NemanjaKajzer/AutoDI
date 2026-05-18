@@ -16,7 +16,19 @@ namespace AutoDI.SourceGenerator
                 transform: (ctx, _) => GetRegistrationModel(ctx)
             )
             .Where(model => model != null);
+
             // P3-11: collect + emit
+            context.RegisterSourceOutput(
+                provider.Collect(),
+                (ctx, models) => EmitRegistrationExtension(ctx, models)
+            );
+        }
+
+        private static void EmitRegistrationExtension(
+            SourceProductionContext ctx,
+            ImmutableArray<RegistrationModel> models)
+        {
+            // P4 tasks will fill this in
         }
 
         private static RegistrationModel GetRegistrationModel(GeneratorSyntaxContext ctx)
