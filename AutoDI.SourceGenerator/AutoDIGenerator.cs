@@ -28,6 +28,10 @@ namespace AutoDI.SourceGenerator
             if (classSymbol == null)
                 return null;
 
+            // skip private classes — they can't be resolved by the DI container
+            if (classSymbol.DeclaredAccessibility == Accessibility.Private)
+                return null;
+
             // Step 2: walk AttributeData to find which marker attribute is present
             ServiceLifetime? lifetime = null;
 
