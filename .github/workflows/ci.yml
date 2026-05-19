@@ -26,3 +26,6 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --configuration Release
+
+      - name: Verify Native AOT publish
+        run: dotnet publish AutoDI.PocApp/AutoDI.PocApp.csproj -c Release -r linux-x64 --self-contained
