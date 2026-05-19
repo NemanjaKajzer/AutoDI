@@ -55,14 +55,31 @@ namespace AutoDI.SourceGenerator
                 default: return lines.ToImmutable();
             }
 
-            if (model.InterfaceFQNs.IsEmpty)
+            if (model.IsOpenGeneric)
             {
-                lines.Add($"services.{methodName}<{model.ImplementationFQN}>();");
+                // open generic: services.AddScoped(typeof(global::IRepo<>), typeof(global::Repo<>))
+                if (model.InterfaceFQNs.IsEmpty)
+                {
+                    lines.Add($"services.{methodName}(typeof({model.ImplementationFQN}));");
+                }
+                else
+                {
+                    foreach (var iface in model.InterfaceFQNs)
+                        lines.Add($"services.{methodName}(typeof({iface}), typeof({model.ImplementationFQN}));");
+                }
             }
             else
             {
-                foreach (var iface in model.InterfaceFQNs)
-                    lines.Add($"services.{methodName}<{iface}, {model.ImplementationFQN}>();");
+                // normal: services.AddScoped<global::IFoo, global::FooImpl>()
+                if (model.InterfaceFQNs.IsEmpty)
+                {
+                    lines.Add($"services.{methodName}<{model.ImplementationFQN}>();");
+                }
+                else
+                {
+                    foreach (var iface in model.InterfaceFQNs)
+                        lines.Add($"services.{methodName}<{iface}, {model.ImplementationFQN}>();");
+                }
             }
 
             return lines.ToImmutable();
