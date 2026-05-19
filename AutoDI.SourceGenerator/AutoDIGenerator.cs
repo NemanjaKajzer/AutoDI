@@ -28,7 +28,7 @@ namespace AutoDI.SourceGenerator
             SourceProductionContext ctx,
             ImmutableArray<RegistrationModel> models)
         {
-            // P4 tasks will fill this in
+            RegistrationEmitter.Emit(ctx, models);
         }
 
         private static RegistrationModel GetRegistrationModel(GeneratorSyntaxContext ctx)
