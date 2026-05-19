@@ -9,7 +9,8 @@ namespace AutoDI
         public static global::Microsoft.Extensions.DependencyInjection.IServiceCollection AddAutoRegisteredServices(
             this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)
         {
-            services.AddTransient<global::TestApp.IFooService, global::TestApp.FooService>();
+            services.AddSingleton<global::TestApp.IFoo, global::TestApp.FooBarService>();
+            services.AddSingleton<global::TestApp.IBar, global::TestApp.FooBarService>();
             return services;
         }
     }

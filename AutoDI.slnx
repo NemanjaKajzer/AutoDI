@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="AutoDI.Attributes/AutoDI.Attributes.csproj" />
+  <Project Path="AutoDI.IntegrationTests/AutoDI.IntegrationTests.csproj" />
+  <Project Path="AutoDI.PocApp/AutoDI.PocApp.csproj" />
   <Project Path="AutoDI.SourceGenerator/AutoDI.SourceGenerator.csproj" />
   <Project Path="AutoDI.Testing/AutoDI.Testing.csproj" />
 </Solution>
