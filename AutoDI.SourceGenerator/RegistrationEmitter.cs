@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 
 namespace AutoDI.SourceGenerator
@@ -23,7 +24,7 @@ namespace AutoDI.SourceGenerator
             sb.AppendLine("            this global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)");
             sb.AppendLine("        {");
 
-            foreach (var model in models)
+            foreach (var model in models.OrderBy(m => m.ImplementationFQN))
             {
                 foreach (var line in GetRegistrationLines(model))
                 {
