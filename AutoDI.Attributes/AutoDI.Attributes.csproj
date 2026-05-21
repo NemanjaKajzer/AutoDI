@@ -2,10 +2,65 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-	</PropertyGroup>
 
+		<!-- Package identity -->
+		<PackageId>AutoDI</PackageId>
+		<Authors>NemanjaKajzer</Authors>
+		<Description>Compile-time dependency injection registration via Roslyn source generators. Zero runtime reflection, fully compatible with Native AOT.</Description>
+		<PackageTags>dependency-injection;source-generator;roslyn;aot;di;dotnet;csharp</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+
+		<!-- Version managed by MinVer via git tags — do not set manually -->
+		<MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
+
+		<!-- Repository -->
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/NemanjaKajzer/AutoDI</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/NemanjaKajzer/AutoDI</PackageProjectUrl>
+
+		<!-- License -->
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+		<!-- NuGet listing -->
+		<Copyright>Copyright © 2026 NemanjaKajzer</Copyright>
+
+		<!-- Reproducible builds -->
+		<ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
+	
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+
+		<PackageReference Include="MinVer" Version="6.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<Target Name="AddGeneratorToPackage"
+        BeforeTargets="_GetPackageFiles">
+		<MSBuild Projects="..\AutoDI.SourceGenerator\AutoDI.SourceGenerator.csproj"
+				 Targets="GetTargetPath"
+				 Properties="Configuration=$(Configuration)">
+			<Output TaskParameter="TargetOutputs"
+					ItemName="GeneratorAssembly" />
+		</MSBuild>
+
+		<ItemGroup>
+			<None Include="@(GeneratorAssembly)"
+				  Pack="true"
+				  PackagePath="analyzers/dotnet/cs"
+				  Visible="false" />
+		</ItemGroup>
+	</Target>
 </Project>
