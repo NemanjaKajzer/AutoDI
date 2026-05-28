@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Benchmarks/">
+    <Project Path="Benchmarks/AutoDI.Benchmarks/AutoDI.Benchmarks.csproj" />
+  </Folder>
   <Project Path="AutoDI.Attributes/AutoDI.Attributes.csproj" />
   <Project Path="AutoDI.IntegrationTests/AutoDI.IntegrationTests.csproj" />
   <Project Path="AutoDI.PocApp/AutoDI.PocApp.csproj" />
