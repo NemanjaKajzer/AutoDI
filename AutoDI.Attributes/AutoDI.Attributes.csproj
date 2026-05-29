@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 
 		<!-- Package identity -->
-		<PackageId>AutoDI</PackageId>
+		<PackageId>Nemza.AutoDI</PackageId>
 		<Authors>NemanjaKajzer</Authors>
 		<Description>Compile-time dependency injection registration via Roslyn source generators. Zero runtime reflection, fully compatible with Native AOT.</Description>
 		<PackageTags>dependency-injection;source-generator;roslyn;aot;di;dotnet;csharp</PackageTags>
