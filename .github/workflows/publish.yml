@@ -26,17 +26,32 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # New Step: Dynamically extract the version number
+      - name: Determine Version
+        id: versioning
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TARGET_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+          else
+            # Strips the 'v' prefix from the Git tag (e.g., v1.0.0 -> 1.0.0)
+            CLEAN_TAG="${GITHUB_REF_NAME#v}"
+            echo "TARGET_VERSION=$CLEAN_TAG" >> $GITHUB_ENV
+          fi
+
       - name: Restore
         run: dotnet restore
 
+      # Pass the version here so the compiled DLL metadata matches the package
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore -p:Version=${{ env.TARGET_VERSION }}
 
+      # Test step works normally since assembly is already built
       - name: Test
         run: dotnet test --configuration Release --no-build
 
+      # Pass the version here so the generated .nupkg uses the correct version name
       - name: Pack
-        run: dotnet pack AutoDI.Attributes/AutoDI.Attributes.csproj --configuration Release --no-build --include-symbols -p:SymbolPackageFormat=snupkg
+        run: dotnet pack AutoDI.Attributes/AutoDI.Attributes.csproj --configuration Release --no-build --include-symbols -p:SymbolPackageFormat=snupkg -p:Version=${{ env.TARGET_VERSION }}
 
       - name: Push to NuGet
         run: dotnet nuget push "**/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
